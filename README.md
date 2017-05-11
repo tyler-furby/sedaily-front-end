@@ -1,5 +1,7 @@
 # software-engineering-daily-website
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/KoalaTeaCode/sedaily-front-end.svg)](https://greenkeeper.io/)
+
 > A Vue.js project
 
 ## Build Setup
