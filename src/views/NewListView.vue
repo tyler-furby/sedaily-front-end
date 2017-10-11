@@ -11,31 +11,37 @@
 
     <div class='filters'>
       <div>
-        <input type='text' v-model='newTag' />
+        <input type='text' v-model='newTag' placeholder='filters & tags'/>
       </div>
 
       <div class='active-tags'>
-        <span v-for='(tag, index) in activeTags' class='active-tag'>{{tag.name}} <span class='remove-tag-button' @click='removeTag(index)'>x</span></span>
+        <span v-for='(tag, index) in activeTags' class='active-tag'>
+          {{tag.name}}
+          <span class='remove-tag-button' @click='removeTag(index)'>x</span>
+        </span>
       </div>
 
       <div class='auto-complete' v-if='suggestedTags.length > 0'>
-        <div v-for='tag in suggestedTags'>{{tag.name}}  <span class='add-tag-button' @click='addTag(tag)'>add</span></div>
+        <div v-for='tag in suggestedTags'>{{tag.name}}
+          <span class='add-tag-button' @click='addTag(tag)'>add</span>
+        </div>
       </div>
     </div>
 
+    <div>
+      <input type='text' placeholder='Search...' v-model='searchTerm' debounce="900"/>
+      <button @click='makeSearch'>Search</button>
+    </div>
+
+
     <transition :name="transition">
-      <div class="news-list" :key="displayedPage" v-if="displayedPage > 0">
         <div v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-          <transition-group tag="ul" name="item">
             <item v-for="item in displayedItems" :key="item._id" :item="item">
             </item>
-          </transition-group>
           <div class="spinner-holder">
             <spinner :show="loading"></spinner>
           </div>
         </div>
-      </div>
-
     </transition>
   </div>
 </template>
@@ -63,12 +69,21 @@ export default {
       displayedPage: Number(this.$store.state.route.params.page) || 1,
       displayedItems: [],
       newTag: '',
+      searchTerm: null,
       activeTags: [],
       tags: [
         {
           id: 1200,
           name: '.NET Rocks!'
-        }
+        } /* ,
+        {
+          id: 1084,
+          name: 'Javascript'
+        },
+        {
+          id: 1080,
+          name: 'Machine Learning'
+        } */
       ]
     }
   },
@@ -82,6 +97,12 @@ export default {
     },
     hasMore () {
       return this.page < this.maxPage
+    },
+    tagIds () {
+      let serverTags = this.activeTags.map((tag) => {
+        return tag.id
+      })
+      return serverTags
     },
     suggestedTags () {
       let suggestedTags = []
@@ -99,18 +120,32 @@ export default {
   watch: {
     page (to, from) {
       // this.loadItems(to, from)
+    },
+    searchTerm () {
+      this.makeSearch()
     }
   },
 
   methods: {
+    makeSearch () {
+      if (this.searchTerm === ' ') {
+        this.searchTerm = null
+      }
+      this.resetItems()
+    },
     loadMore () {
       if (this.endOfItems) {
         return
       }
       this.loading = true
-      console.log('load more')
       let params = {
-        type: this.type
+        type: this.type,
+        tags: this.tagIds,
+        searchTerm: this.search
+      }
+
+      if (this.searchTerm) {
+        params.search = this.searchTerm
       }
       if (this.displayedItems.length > 0) {
         let lastItem = this.displayedItems[this.displayedItems.length - 1]
@@ -132,28 +167,18 @@ export default {
     },
     removeTag (index) {
       this.activeTags.splice(index, 1)
-      if (this.activeTags.length === 0) this.loadItems(1, 0)
+      this.resetItems()
     },
     addTag (tag) {
       this.activeTags.push(tag)
       this.newTag = ''
-      this.filterTags()
+      this.resetItems()
     },
-    filterTags () {
-      let serverTags = this.activeTags.map((tag) => {
-        return tag.id
-      })
-
-      let params = {
-        type: this.type,
-        page: this.page,
-        tags: serverTags
-      }
-
-      this.$store.dispatch('fetchListData', params)
-        .then((result) => {
-          this.displayedItems = result.items
-        })
+    resetItems () {
+      this.displayedItems = []
+      this.endOfItems = false
+      this.loading = false
+      this.loadMore()
     },
     loadItems (to = this.page, from = -1) {
       this.loading = true
