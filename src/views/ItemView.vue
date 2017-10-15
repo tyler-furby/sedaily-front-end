@@ -72,7 +72,7 @@ export default {
       return this.$store.state.itemComments[this.$route.params.id] || []
     },
     itemPreviewText () {
-      return this.$store.state.items[this.$route.params.id].content.rendered.substring(0, 100)
+      return 'this is a preview of the article you are going to read'
     }
   },
   beforeMount () {
