@@ -71,8 +71,10 @@ export default {
     comments () {
       return this.$store.state.itemComments[this.$route.params.id] || []
     },
+    // TODO: Make this horrible
     itemPreviewText () {
-      return 'this is a preview of the article you are going to read'
+      var beginningOfPreviewText = this.item.content.rendered.indexOf('<span style="font-weight: 400;">')
+      return this.item.content.rendered.substring(beginningOfPreviewText + 32, beginningOfPreviewText + 300) + '...'
     }
   },
   beforeMount () {
