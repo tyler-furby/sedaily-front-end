@@ -30,9 +30,15 @@
       </div>
 
       <div v-for="comment in comments"> Comment: {{comment.content}} </div>
-      <div class="item-view-comments" v-html='item.content.rendered'>
-      </div>
-
+        <v-expansion-panel>
+          <v-expansion-panel-content>
+            <div slot="header">{{itemPreviewText}}</div>
+            <v-card>
+              <v-card-text class="grey lighten-3" v-html='item.content.rendered'></v-card-text>
+            </v-card>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      <div class="item-view-comments">here are some comments</div>
       <!-- <div class="item-view-comments">
         <p class="item-view-comments-header">
           {{ item.kids ? item.descendants + ' comments' : 'No comments yet.'}}
@@ -64,6 +70,9 @@ export default {
     },
     comments () {
       return this.$store.state.itemComments[this.$route.params.id] || []
+    },
+    itemPreviewText () {
+      return this.$store.state.items[this.$route.params.id].content.rendered.substring(0, 100)
     }
   },
   beforeMount () {
