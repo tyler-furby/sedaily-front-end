@@ -33,6 +33,8 @@
       <div class="item-view-comments" v-html='item.content.rendered'>
       </div>
 
+      <item-related-links-list v-bind:links="item.relatedLinks"></item-related-links-list>
+
       <!-- <div class="item-view-comments">
         <p class="item-view-comments-header">
           {{ item.kids ? item.descendants + ' comments' : 'No comments yet.'}}
@@ -49,13 +51,19 @@
 <script>
 import Spinner from '../components/Spinner.vue'
 import Comment from '../components/Comment.vue'
+import ItemRelatedLinksList from '../components/itemrelatedlinks/ItemRelatedLinksList.vue'
 
 export default {
   name: 'item-view',
-  components: { Spinner, Comment },
+  components: {
+    Spinner,
+    Comment,
+    ItemRelatedLinksList
+  },
   data () {
     return {
-      loading: true
+      loading: true,
+      relatedLinks: ['foo', 'bar.com']
     }
   },
   computed: {
