@@ -121,5 +121,21 @@ export default {
         'Authorization': 'Bearer ' + token
       }
     })
+  },
+
+  addLink: ({commit, getters, state}, { id, url }) => {
+    let token = getters.getToken
+    if (!token) {
+      alert('You must login to add a link')
+      return
+    }
+    commit('addLink', { articleId: id, link: url })
+    let article = state.items[id]
+    return axios.post(`${BASE_URL}/posts/${article._id}/addLink`, {}, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
   }
+
 }

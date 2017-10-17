@@ -33,7 +33,7 @@
       <div class="item-view-comments" v-html='item.content.rendered'>
       </div>
 
-      <item-related-links-list v-bind:links="item.relatedLinks"></item-related-links-list>
+      <item-related-links-list v-bind:item="item.relatedLinks" v-bind:id="item._id"></item-related-links-list>
 
       <!-- <div class="item-view-comments">
         <p class="item-view-comments-header">

@@ -15,6 +15,7 @@
 
 <script>
 export default {
+  props: ['id'],
   data () {
     return {
       urlText: '',
@@ -29,8 +30,15 @@ export default {
       this.isCreating = false
     },
     sendForm () {
-      const title = this.titleText
-      console.log(title)
+      const urlText = this.urlText
+      console.log(this.id)
+      console.log(urlText)
+
+      this.$store.dispatch('addLink', {
+        id: this.id,
+        url: urlText
+      })
+
       this.urlText = ''
       this.isCreating = false
     }
