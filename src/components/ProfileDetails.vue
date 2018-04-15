@@ -4,22 +4,58 @@
         <router-link :to="'/edit-profile'">
           Edit Profile
         </router-link>
+        |
+         <router-link class="link" :to="{ name: 'NotificationSettings', params: {}}">
+           Edit Notification Settings
+         </router-link>
+
       </h6>
-      <div class="col col-sm-auto">
-        <img class="profile-img" :src="avatarUrl" />
-      </div>
-      <div class="col-sm-6 col-md-4">
-        <h4>
-          {{displayName}}
-        </h4>
-        <p v-if="userData.website">
-          <a :href="userData.website | externalUrl" target="_blank"
-             rel="external nofollow"
-          > {{ userData.website | host }} </a>
+      <div class="wrapper">
+        <div class="col col-sm-auto">
+          <div class="crop-image">
+            <img class="profile-img" :src="avatarUrl" />
+          </div>
+        </div>
+        <div class="user-details col-sm-6 col-md-4">
+          <h4 class="display-name">
+            {{displayName}}
+          </h4>
+          <p class="display-bio">
+            <small class="text-muted">{{displayBio}}</small>
+          </p>
+          <div class="social-icons">
+            <p class="display-email">
+              <span class="text-muted"> <a :href="'mailto:' + userData.publicEmail"
+                 rel="external nofollow"
+              ><i class="fa fa-envelope-o" aria-hidden="true"></i></a></span>
+            </p>
+            <p class="display-github">
+              <span class="text-muted"> <a :href="userData.github | externalUrl" target="_blank"
+                 rel="external nofollow"
+              ><i class="fa fa-github" aria-hidden="true"></i></a></span>
+            </p>
+            <p class="display-linkedin">
+              <span class="text-muted"> <a :href="userData.linkedin | externalUrl" target="_blank"
+                 rel="external nofollow"
+              ><i class="fa fa-linkedin" aria-hidden="true"></i></a></span>
+            </p>
+            <p class="display-twitter">
+              <span class="text-muted"> <a :href="userData.twitter | externalUrl" target="_blank"
+                 rel="external nofollow"
+              ><i class="fa fa-twitter" aria-hidden="true"></i></a></span>
+            </p>
+          </div>
+          <br/>
+          <p class="display-website" v-if="userData.website">
+            <a :href="userData.website | externalUrl" target="_blank"
+               rel="external nofollow"
+            > {{ userData.website | host }} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+          </p>
+        <hr/>
+        <p class="display-about">
+          <small class ="text-muted">{{displayAbout}}</small>
         </p>
-        <p>
-          <small class="text-muted">{{displayBio}}</small>
-        </p>
+        </div>
       </div>
   </div>
 </template>
@@ -38,7 +74,9 @@
             avatarUrl: '',
             bio: '',
             name: '',
-            website: ''
+            website: '',
+            about: '',
+            publicEmail: ''
           }
         }
       },
@@ -55,6 +93,12 @@
         displayBio () {
           return this.userData.bio || `${this.displayName} is still writing their biography`
         },
+        displayAbout () {
+          return this.userData.about || `${this.displayName} is still writing their about section`
+        },
+        displayEmail () {
+          return this.userData.publicEmail || `${this.displayName} has no contact information`
+        },
         avatarUrl (state) {
           return this.userData.avatarUrl || state.placeholderAvatar
         }
@@ -65,13 +109,54 @@
 
 <style scoped lang="stylus">
   @import './../css/variables'
-  .profile-details
-    padding-top 5px
+
+  .wrapper
+    margin-left auto
+    margin-right auto
+    width 960px
+
+  .user-details
+    margin-top -40px
+    margin-left auto
+    margin-right auto
+    text-align center
+    .display-name
+      padding-top 50px
+    .display-website a
+      text-decoration none
+      color primary-color
+      &:hover
+        font-weight bold
+    .display-bio .text-muted
+      font-weight bold
+
+  .social-icons p
+    display inline
+    padding 20px
+
+  .crop-image
+    margin-left auto
+    margin-right auto
+    background-position 50%
+    background-repeat no-repeat
+    border-radius 50%
+    width 100px
+    height 100px
+    overflow hidden
+    transition all .5s ease
+    &:hover
+      width 120px
+      height 120px
 
   .profile-img
-    width 100px
+    display inline
+    margin-left 0 auto
+    height 100%
+    width auto
 
   .edit-link
+    padding 10px
+    text-align center
     a
       color accent-color
 </style>

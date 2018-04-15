@@ -27,14 +27,32 @@ export default {
     return axios.get(`${BASE_URL}/users/${userId}`)
   },
 
-  updateProfile: ({ commit, dispatch }, { id, username, bio, isAvatarSet, website, name, email }) => {
+  updateEmailNotiicationSettings: ({ dispatch }, { emailNotificationSettings }) => {
+    return axios.put(`${BASE_URL}/users/update-email-notiication-settings`, emailNotificationSettings)
+      .then((response) => {
+        return dispatch('fetchMyProfileData')
+      })
+      .catch((error) => {
+        // @TODO: Add pretty pop up here
+        console.log(error)
+        Vue.toasted.error(error.response.data.message)
+        return error
+      })
+  },
+
+  updateProfile: ({ commit, dispatch }, { id, username, bio, github, linkedin, twitter, about, isAvatarSet, website, name, email, publicEmail }) => {
     return axios.put(`${BASE_URL}/users/${id}`, {
       username,
       bio,
+      about,
       website,
       name,
       isAvatarSet,
-      email
+      email,
+      publicEmail,
+      github,
+      linkedin,
+      twitter
     })
       .then((response) => {
         return dispatch('fetchMyProfileData')
