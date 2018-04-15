@@ -24,22 +24,22 @@
             <small class="text-muted">{{displayBio}}</small>
           </p>
           <div class="social-icons">
-            <p class="display-email">
+            <p v-if="userData.publicEmail" class="display-email">
               <span class="text-muted"> <a :href="'mailto:' + userData.publicEmail"
                  rel="external nofollow"
               ><i class="fa fa-envelope-o" aria-hidden="true"></i></a></span>
             </p>
-            <p class="display-github">
+            <p v-if="userData.github" class="display-github">
               <span class="text-muted"> <a :href="userData.github | externalUrl" target="_blank"
                  rel="external nofollow"
               ><i class="fa fa-github" aria-hidden="true"></i></a></span>
             </p>
-            <p class="display-linkedin">
+            <p v-if="userData.linkedin" class="display-linkedin">
               <span class="text-muted"> <a :href="userData.linkedin | externalUrl" target="_blank"
                  rel="external nofollow"
               ><i class="fa fa-linkedin" aria-hidden="true"></i></a></span>
             </p>
-            <p class="display-twitter">
+            <p v-if="userData.twitter" class="display-twitter">
               <span class="text-muted"> <a :href="userData.twitter | externalUrl" target="_blank"
                  rel="external nofollow"
               ><i class="fa fa-twitter" aria-hidden="true"></i></a></span>
@@ -73,6 +73,9 @@
             username: '',
             avatarUrl: '',
             bio: '',
+            twitter: '',
+            linkedin: '',
+            github: '',
             name: '',
             website: '',
             about: '',
@@ -95,9 +98,6 @@
         },
         displayAbout () {
           return this.userData.about || `${this.displayName} is still writing their about section`
-        },
-        displayEmail () {
-          return this.userData.publicEmail || `${this.displayName} has no contact information`
         },
         avatarUrl (state) {
           return this.userData.avatarUrl || state.placeholderAvatar
